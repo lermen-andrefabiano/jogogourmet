@@ -13,7 +13,6 @@
 	<name>Gourmet</name>
 
 	<dependencies>
-		<!-- Dependências do projeto -->
 	</dependencies>
 
 	<build>
@@ -24,7 +23,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>br.com.jogo.gourmet.Gourmet</mainClass>
+							<mainClass>br.com.jogo.gourmet.GourmetMain</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Built-By>andre.lermen</Built-By>
