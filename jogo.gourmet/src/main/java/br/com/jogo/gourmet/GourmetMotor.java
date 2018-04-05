@@ -7,10 +7,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.LayoutStyle;
 
 import br.com.jogo.gourmet.model.Prato;
 
@@ -28,6 +30,9 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 	private int resultConfirm;
 
+	/**
+	 * Método que inicia o jogo
+	 */
 	public void start() {
 		this.initConfigDefault();
 
@@ -35,12 +40,17 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 	}
 
+	/**
+	 * Método que adiciona as configurações iniciais ao jogo
+	 */
 	public void initConfigDefault() {
 		this.pratos = new ArrayList<>();
 
+		// prato de massa
 		Prato pratoMassa = new Prato("Massa", "");
 		pratoMassa.getSubPrato().add("Lasanha");
 
+		// prato de bolo
 		Prato pratoBolo = new Prato("Bolo de Chocolate", "");
 
 		this.pratos.add(pratoMassa);
@@ -48,7 +58,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Método responsável por definir os pratos padrões do jogo.
+	 * Método responsável por executar o jogo
 	 * 
 	 */
 	private void executarMotor() {
@@ -89,21 +99,28 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 	}
 
+	/**
+	 * Método que mostra o prato para adivinhação
+	 * 
+	 * @param subPrato
+	 */
 	private void confirmaPrato(String subPrato) {
 		this.resultConfirm = JOptionPane.showConfirmDialog(this,
 				String.format(GourmetConstantes.MSG_PRATO_PENSOU, subPrato), GourmetConstantes.CONFIRMACAO,
 				JOptionPane.YES_NO_OPTION);
 	}
 
+	/**
+	 * Método que mostra a mensagem de aceto do prato
+	 */
 	private void acertei() {
-		JOptionPane.showMessageDialog(this, GourmetConstantes.MSG_ACERTEI_NOVO, GourmetConstantes.MSG_ACERTEI, JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, GourmetConstantes.MSG_ACERTEI_NOVO, GourmetConstantes.MSG_ACERTEI,
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
 	 * Método que armazena o prato preferido
 	 * 
-	 * @author andre.lermen
-	 *
 	 */
 	private void pratoPreferido(int contador) {
 		if (this.resultConfirm == 1) {
@@ -119,12 +136,22 @@ public class GourmetMotor extends JFrame implements Serializable {
 		}
 	}
 
+	/**
+	 * Método que pega o último prato negado
+	 * 
+	 * @param contador
+	 * @return String
+	 */
 	private String obterPratoAnterior(int contador) {
-		int index = contador > 0 ? contador - 1 :0;
+		int index = contador > 0 ? contador - 1 : 0;
 		Prato pratoAnterior = this.pratos.get(index);
 		return pratoAnterior.getPrato();
 	}
 
+	/**
+	 * Inicia os componentes de tela do jogo
+	 * 
+	 */
 	private void initComponents() {
 		setTitle(GourmetConstantes.MSG_TITULO);
 		setVisible(true);
@@ -143,22 +170,40 @@ public class GourmetMotor extends JFrame implements Serializable {
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(GourmetConstantes.MSG_TITULO);
 
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-				.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+		GroupLayout layout = new GroupLayout(getContentPane());
+
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				.addGroup(layout.createSequentialGroup().addContainerGap(64, Short.MAX_VALUE).addComponent(label)
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(button).addGap(19, 19,
+								19)));
+
+		layout.setHorizontalGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup().addGap(108, 108, 108).addComponent(label))
 						.addGroup(layout.createSequentialGroup().addGap(145, 145, 145).addComponent(button,
-								javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-				.addContainerGap(123, Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-				javax.swing.GroupLayout.Alignment.TRAILING,
-				layout.createSequentialGroup().addContainerGap(64, Short.MAX_VALUE).addComponent(label)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(button)
-						.addGap(19, 19, 19)));
+								GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+				.addContainerGap(123, Short.MAX_VALUE));
+
+		getContentPane().setLayout(layout);
 
 		pack();
 		setLocationRelativeTo(null);
 	}
+
+	public List<Prato> getPratos() {
+		return pratos;
+	}
+
+	public void setPratos(List<Prato> pratos) {
+		this.pratos = pratos;
+	}
+
+	public int getResultConfirm() {
+		return resultConfirm;
+	}
+
+	public void setResultConfirm(int resultConfirm) {
+		this.resultConfirm = resultConfirm;
+	}
+
 }
