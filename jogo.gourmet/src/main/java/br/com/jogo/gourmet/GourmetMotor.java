@@ -3,9 +3,12 @@ package br.com.jogo.gourmet;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -30,6 +33,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 	private int resultConfirm;
 
+	private Properties prop;
+
 	/**
 	 * Método que inicia o jogo
 	 */
@@ -41,17 +46,37 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	/**
+	 * Método que inicializa os valores de todas as labes do jogo
+	 */
+	public Properties getProperties() {
+		if (this.prop == null) {
+			InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("gourmet.properties");
+
+			this.prop = new Properties();
+
+			try {
+				this.prop.load(inputStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return this.prop;
+
+	}
+
+	/**
 	 * Método que adiciona as configurações iniciais ao jogo
 	 */
 	public void initConfigDefault() {
 		this.pratos = new ArrayList<>();
 
 		// prato de massa
-		Prato pratoMassa = new Prato("Massa", "");
-		pratoMassa.getSubPrato().add("Lasanha");
+		Prato pratoMassa = new Prato(this.getProperties().getProperty("gourmet.massa"), "");
+		pratoMassa.getSubPrato().add(this.getProperties().getProperty("gourmet.lasanha"));
 
 		// prato de bolo
-		Prato pratoBolo = new Prato("Bolo de Chocolate", "");
+		Prato pratoBolo = new Prato(this.getProperties().getProperty("gourmet.bolo.chocolate"), "");
 
 		this.pratos.add(pratoMassa);
 		this.pratos.add(pratoBolo);
@@ -106,16 +131,16 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 */
 	private void confirmaPrato(String subPrato) {
 		this.resultConfirm = JOptionPane.showConfirmDialog(this,
-				String.format(GourmetConstantes.MSG_PRATO_PENSOU, subPrato), GourmetConstantes.CONFIRMACAO,
-				JOptionPane.YES_NO_OPTION);
+				String.format(this.getProperties().getProperty("gourmet.prato.pensou"), subPrato),
+				this.getProperties().getProperty("gourmet.confirmacao"), JOptionPane.YES_NO_OPTION);
 	}
 
 	/**
 	 * Método que mostra a mensagem de aceto do prato
 	 */
 	private void acertei() {
-		JOptionPane.showMessageDialog(this, GourmetConstantes.MSG_ACERTEI_NOVO, GourmetConstantes.MSG_ACERTEI,
-				JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, this.getProperties().getProperty("gourmet.acertei.novo"),
+				this.getProperties().getProperty("gourmet.acertei"), JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -125,12 +150,13 @@ public class GourmetMotor extends JFrame implements Serializable {
 	private void pratoPreferido(int contador) {
 		if (this.resultConfirm == 1) {
 
-			String entradaPrato = JOptionPane.showInputDialog(this, GourmetConstantes.MSG_QUAL_PRATO,
-					GourmetConstantes.PRATO, JOptionPane.QUESTION_MESSAGE);
+			String entradaPrato = JOptionPane.showInputDialog(this,
+					this.getProperties().getProperty("gourmet.qual.prato"),
+					this.getProperties().getProperty("gourmet.prato"), JOptionPane.QUESTION_MESSAGE);
 
 			String tipoPrato = JOptionPane.showInputDialog(this,
 					String.format(GourmetConstantes.MSG_TIPO_PRATO, entradaPrato, this.obterPratoAnterior(contador)),
-					GourmetConstantes.CARACTERISTICA_PRATO, JOptionPane.QUESTION_MESSAGE);
+					this.getProperties().getProperty("gourmet.caracteristica.prato"), JOptionPane.QUESTION_MESSAGE);
 
 			this.pratos.add(1, new Prato(entradaPrato, tipoPrato));
 		}
@@ -153,22 +179,19 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * 
 	 */
 	private void initComponents() {
-		setTitle(GourmetConstantes.MSG_TITULO);
+		setTitle(this.getProperties().getProperty("gourmet.titulo"));
 		setVisible(true);
+		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-		JLabel label = new JLabel(GourmetConstantes.MSG_DIALOGO_GOSTO);
+		JLabel label = new JLabel(this.getProperties().getProperty("gourmet.dialogo.gosto"));
 		label.setFont(new Font("Tahoma", 1, 11));
-		label.setText(GourmetConstantes.MSG_DIALOGO_GOSTO);
 
-		JButton button = new JButton(GourmetConstantes.OK);
+		JButton button = new JButton(this.getProperties().getProperty("gourmet.ok"));
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				executarMotor();
 			}
 		});
-
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle(GourmetConstantes.MSG_TITULO);
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 
