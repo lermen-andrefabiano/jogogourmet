@@ -2,10 +2,6 @@ package br.com.jogo.gourmet;
 
 import java.io.Serializable;
 
-import br.com.jogo.gourmet.acao.AcaoGourmet;
-import br.com.jogo.gourmet.acao.AcaoMotorJogo;
-import br.com.jogo.gourmet.acao.AcaoStartFrame;
-
 /**
  * Classe mestre para iniciar o jogo gourmet
  * 
@@ -18,10 +14,8 @@ public class GourmetMain implements Serializable {
 
 	public static void main(String[] args) {
 
-		AcaoGourmet acaoStartFrame = new AcaoStartFrame();
-		AcaoGourmet acaoMotorJogo = new AcaoMotorJogo();
-		
-		acaoStartFrame.addProximo(acaoMotorJogo);
-		acaoStartFrame.executar();
+		new GourmetMotor().start();
+
 	}
+
 }

@@ -21,6 +21,12 @@ public class GourmetConstantes {
 	public static final String MSG_TIPO_PRATO = "%s é _____ mas %s não.";
 
 	public static final String LASANHA = "Lasanha";
+	
+	public static final String CONFIRMACAO = "Confirmação";
+	
+	public static final String PRATO = "Prato";
+	
+	public static final String CARACTERISTICA_PRATO = "Característica Prato";
 
 	public static final String BOLO_CHOCOLATE = "Bolo de Chocolate";
 
