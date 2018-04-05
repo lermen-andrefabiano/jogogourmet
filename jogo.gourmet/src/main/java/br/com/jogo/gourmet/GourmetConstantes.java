@@ -10,7 +10,9 @@ public class GourmetConstantes {
 
 	public static final String MSG_PRATO_LASANHA = "O prato que você pensou é Lasanha?";
 
-	public static final String MSG_ACERTEI = "Acertei de novo!";
+	public static final String MSG_ACERTEI_NOVO = "Acertei de novo!";
+	
+	public static final String MSG_ACERTEI = "Acertei!";
 
 	public static final String MSG_BOLO_CHOCOLATE = "O prato que você pensou é Bolo de Chocolate?";
 

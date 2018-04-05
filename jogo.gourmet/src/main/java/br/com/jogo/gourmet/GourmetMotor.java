@@ -75,8 +75,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 					if (this.resultConfirm == JOptionPane.YES_OPTION) {
 						acertei();
-						break;
 					}
+					break;
 				} else {
 					acertei();
 					break;
@@ -96,7 +96,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	private void acertei() {
-		JOptionPane.showMessageDialog(this, GourmetConstantes.MSG_ACERTEI, "Acertei", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, GourmetConstantes.MSG_ACERTEI_NOVO, GourmetConstantes.MSG_ACERTEI, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -120,7 +120,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	private String obterPratoAnterior(int contador) {
-		Prato pratoAnterior = this.pratos.get(contador - 1);
+		int index = contador > 0 ? contador - 1 :0;
+		Prato pratoAnterior = this.pratos.get(index);
 		return pratoAnterior.getPrato();
 	}
 
