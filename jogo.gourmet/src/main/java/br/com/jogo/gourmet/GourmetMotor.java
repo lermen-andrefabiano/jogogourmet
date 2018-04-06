@@ -103,7 +103,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 			Prato prato = this.pratos.get(contador);
 
 			// confirma o prato informado
-			this.confirmaPrato(prato.getDescricao());
+			this.confirmaPrato(this.obterPrato(prato));
 
 			if (this.resultConfirm == JOptionPane.YES_OPTION) {
 				if (!prato.getSubPrato().isEmpty()) {
@@ -117,7 +117,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 						}
 					}
 				} else if (!prato.getCaracteristica().isEmpty()) {
-					this.confirmaPrato(prato.getCaracteristica());
+					this.confirmaPrato(prato.getDescricao());
 
 					if (this.resultConfirm == JOptionPane.YES_OPTION) {
 						this.acertei();
@@ -133,6 +133,10 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 		this.pratoPreferido(contador);
 
+	}
+
+	private String obterPrato(Prato prato) {
+		return prato.getCaracteristica().isEmpty() ? prato.getDescricao() : prato.getCaracteristica();
 	}
 
 	/**
