@@ -136,7 +136,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	private String obterPrato(Prato prato) {
-		return prato.getCaracteristica().isEmpty() ? prato.getDescricao() : prato.getCaracteristica();
+		return prato.getCaracteristica() == null || prato.getCaracteristica().isEmpty() ? prato.getDescricao()
+				: prato.getCaracteristica();
 	}
 
 	/**
