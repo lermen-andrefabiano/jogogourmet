@@ -13,6 +13,7 @@ public class GourmetMain implements Serializable {
 	private static final long serialVersionUID = -8331285322591800101L;
 
 	public static void main(String[] args) {
+		// start do jogo
 		new GourmetMotor().start();
 
 	}

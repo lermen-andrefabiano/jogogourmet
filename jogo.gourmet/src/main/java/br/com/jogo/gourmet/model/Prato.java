@@ -8,35 +8,35 @@ public class Prato implements Serializable {
 
 	private static final long serialVersionUID = -549147362813395895L;
 
-	private String prato;
+	private String descricao;
 
-	private String tipoPrato;
+	private String caracteristica;
 	
 	private List<String> subPrato;
 
 	public Prato() {
 	}
 
-	public Prato(String prato, String tipoPrato) {
-		this.prato = prato;
-		this.tipoPrato = tipoPrato;
+	public Prato(String descricao, String caracteristica) {
+		this.descricao = descricao;
+		this.caracteristica = caracteristica;
 		this.subPrato = new ArrayList<>();
 	}
 
-	public String getPrato() {
-		return prato;
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
-	public void setPrato(String prato) {
-		this.prato = prato;
+	public String getCaracteristica() {
+		return caracteristica;
 	}
-
-	public String getTipoPrato() {
-		return tipoPrato;
-	}
-
-	public void setTipoPrato(String tipoPrato) {
-		this.tipoPrato = tipoPrato;
+	
+	public void setCaracteristica(String caracteristica) {
+		this.caracteristica = caracteristica;
 	}
 	
 	public void setSubPrato(List<String> subPrato) {

@@ -39,7 +39,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * Método que inicia o jogo
 	 */
 	public void start() {
-		this.initConfigDefault();
+		this.initConfigurcaoPadrao();
 
 		this.initComponents();
 
@@ -50,6 +50,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 */
 	public Properties getProperties() {
 		if (this.prop == null) {
+			// obtem as lables do arquivo gourmet.properties
 			InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("gourmet.properties");
 
 			this.prop = new Properties();
@@ -68,7 +69,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 	/**
 	 * Método que adiciona as configurações iniciais ao jogo
 	 */
-	public void initConfigDefault() {
+	public void initConfigurcaoPadrao() {
+		// inicializa os pratos
 		this.pratos = new ArrayList<>();
 
 		// prato de massa
@@ -86,36 +88,38 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * Método responsável por executar o jogo
 	 * 
 	 */
-	private void executarMotor() {
+	private void executarMotorJogo() {
 		int contador;
 
 		for (contador = 0; contador <= this.pratos.size() - 1; contador++) {
 
+			// recupera o prato
 			Prato prato = this.pratos.get(contador);
 
-			this.confirmaPrato(prato.getPrato());
+			// confirma o prato informado
+			this.confirmaPrato(prato.getDescricao());
 
 			if (this.resultConfirm == JOptionPane.YES_OPTION) {
 				if (!prato.getSubPrato().isEmpty()) {
 					for (String subPrato : prato.getSubPrato()) {
+						// caso o prato for massa, verifica o seus sub pratos ex lasanha
 						this.confirmaPrato(subPrato);
 
 						if (this.resultConfirm == JOptionPane.YES_OPTION) {
-							acertei();
+							this.acertei();
 						}
 					}
-					break;
-				} else if (!prato.getTipoPrato().isEmpty()) {
-					this.confirmaPrato(prato.getTipoPrato());
+				} else if (!prato.getCaracteristica().isEmpty()) {
+					this.confirmaPrato(prato.getCaracteristica());
 
 					if (this.resultConfirm == JOptionPane.YES_OPTION) {
-						acertei();
+						this.acertei();
 					}
-					break;
-				} else {
-					acertei();
-					break;
-				}
+				}else{
+					this.acertei();
+				}				
+				
+				break;
 			}
 
 		}
@@ -125,7 +129,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Método que mostra o prato para adivinhação
+	 * Método que mostra o prato que possivelmente foi pensado
 	 * 
 	 * @param subPrato
 	 */
@@ -136,7 +140,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	}
 
 	/**
-	 * Método que mostra a mensagem de aceto do prato
+	 * Método que mostra a mensagem de acerto do prato
 	 */
 	private void acertei() {
 		JOptionPane.showMessageDialog(this, this.getProperties().getProperty("gourmet.acertei.novo"),
@@ -148,17 +152,21 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * 
 	 */
 	private void pratoPreferido(int contador) {
+		// caso todas as respostas anteriores forem NÂO
 		if (this.resultConfirm == 1) {
-
-			String entradaPrato = JOptionPane.showInputDialog(this,
+			
+			// pede qual prato gosta
+			String descricaoPrato = JOptionPane.showInputDialog(this,
 					this.getProperties().getProperty("gourmet.qual.prato"),
 					this.getProperties().getProperty("gourmet.prato"), JOptionPane.QUESTION_MESSAGE);
 
-			String tipoPrato = JOptionPane.showInputDialog(this,
-					String.format(GourmetConstantes.MSG_TIPO_PRATO, entradaPrato, this.obterPratoAnterior(contador)),
+			// pede qual caracteristica do prato que gosta
+			String caracteristicaPrato = JOptionPane.showInputDialog(this,
+					String.format(this.getProperties().getProperty("gourmet.tipo.prato"), descricaoPrato, this.obterPratoAnterior(contador)),
 					this.getProperties().getProperty("gourmet.caracteristica.prato"), JOptionPane.QUESTION_MESSAGE);
 
-			this.pratos.add(1, new Prato(entradaPrato, tipoPrato));
+			// adiciona o novo prato na lista de pratos
+			this.pratos.add(new Prato(descricaoPrato, caracteristicaPrato));
 		}
 	}
 
@@ -171,7 +179,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	private String obterPratoAnterior(int contador) {
 		int index = contador > 0 ? contador - 1 : 0;
 		Prato pratoAnterior = this.pratos.get(index);
-		return pratoAnterior.getPrato();
+		return pratoAnterior.getDescricao();
 	}
 
 	/**
@@ -189,7 +197,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 		JButton button = new JButton(this.getProperties().getProperty("gourmet.ok"));
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				executarMotor();
+				executarMotorJogo();
 			}
 		});
 
