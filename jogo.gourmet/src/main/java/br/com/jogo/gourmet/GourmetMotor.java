@@ -40,7 +40,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * Método que inicia o jogo
 	 */
 	public void start() {
-		this.initConfigurcaoPadrao();
+		this.initConfiguracaoPadrao();
 
 		this.initComponents();
 
@@ -70,7 +70,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	/**
 	 * Método que adiciona as configurações iniciais ao jogo
 	 */
-	public void initConfigurcaoPadrao() {
+	public void initConfiguracaoPadrao() {
 		// inicializa os pratos
 		this.pratos = new ArrayList<>();
 
