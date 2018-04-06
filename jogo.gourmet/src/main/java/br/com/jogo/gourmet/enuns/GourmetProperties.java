@@ -15,6 +15,7 @@ public enum GourmetProperties {
 	QUAL_PRATO("gourmet.qual.prato"),
 	PRATO("gourmet.prato"),	
 	TIPO_PRATO("gourmet.tipo.prato"),
+	PRATO_MASSA("gourmet.prato.massa"),
 	CARACTERISTICA_PRATO("gourmet.caracteristica.prato");
 
 	private String key;

@@ -29,13 +29,15 @@ import br.com.jogo.gourmet.model.Prato;
  */
 public class GourmetMotor extends JFrame implements Serializable {
 
+	private static final long serialVersionUID = -8331285322591800101L;
+
 	private static final String GOURMET_PROPERTIES = "gourmet.properties";
 
 	private static final String FONT_TAHOMA = "Tahoma";
 
-	private static final long serialVersionUID = -8331285322591800101L;
+	private List<Prato> pratoMassa;
 
-	private List<Prato> pratos;
+	private List<Prato> pratoBolo;
 
 	private int resultConfirm;
 
@@ -76,78 +78,86 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * Método que adiciona as configurações iniciais ao jogo
 	 */
 	public void initConfiguracaoPadrao() {
-		// inicializa os pratos
-		this.pratos = new ArrayList<>();
+		// inicializa os prato de massa
+		this.pratoMassa = new ArrayList<>();
+
+		// inicializa os pratos de bolo
+		this.pratoBolo = new ArrayList<>();
 
 		// prato de massa
-		Prato pratoMassa = new Prato(this.getProperties().getProperty(GourmetProperties.MASSA.toString()), "");
-		pratoMassa.getSubPrato().add(this.getProperties().getProperty(GourmetProperties.LASANHA.toString()));
+		Prato pratoMassa = new Prato(this.getProperties().getProperty(GourmetProperties.LASANHA.toString()), "");
 
 		// prato de bolo
 		Prato pratoBolo = new Prato(this.getProperties().getProperty(GourmetProperties.BOLO_CHOCOLATE.toString()), "");
 
-		this.pratos.add(pratoMassa);
-		this.pratos.add(pratoBolo);
+		this.pratoMassa.add(pratoMassa);
+		this.pratoBolo.add(pratoBolo);
+	}
+
+	private void executarPratoMassa() {
+		this.confirmaPrato(this.getProperties().getProperty(GourmetProperties.PRATO_MASSA.toString()));
+
+		if (this.resultConfirm == JOptionPane.YES_OPTION) {
+			this.executarMotorJogo(this.pratoMassa);
+		} else {
+			this.executarMotorJogo(this.pratoBolo);
+		}
+
 	}
 
 	/**
 	 * Método responsável por executar o jogo
 	 * 
 	 */
-	private void executarMotorJogo() {
+	private void executarMotorJogo(List<Prato> pratos) {
 		int contador;
 
-		for (contador = 0; contador <= this.pratos.size() - 1; contador++) {
+		for (contador = 0; contador <= pratos.size() - 1; contador++) {
 
 			// recupera o prato
-			Prato prato = this.pratos.get(contador);
+			Prato prato = pratos.get(contador);
 
-			// confirma o prato informado
-			this.confirmaPrato(this.obterPrato(prato));
+			if (prato.getCaracteristica().isEmpty()) {
 
-			if (this.resultConfirm == JOptionPane.YES_OPTION) {
-				if (!prato.getSubPrato().isEmpty()) {
-					for (String subPrato : prato.getSubPrato()) {
-						// caso o prato for massa, verifica o seus sub pratos ex
-						// lasanha
-						this.confirmaPrato(subPrato);
+				String msg = String.format(this.getProperties().getProperty(GourmetProperties.PRATO_PENSOU.toString()),
+						prato.getDescricao());
 
-						if (this.resultConfirm == JOptionPane.YES_OPTION) {
-							this.acertei();
-						}
-					}
-				} else if (!prato.getCaracteristica().isEmpty()) {
-					this.confirmaPrato(prato.getDescricao());
+				// confirma o prato informado
+				this.confirmaPrato(msg);
+
+				if (this.resultConfirm == JOptionPane.YES_OPTION) {
+					this.acertei();
+					break;
+				}
+			} else {
+				String caracteristica = String.format(
+						this.getProperties().getProperty(GourmetProperties.PRATO_PENSOU.toString()),
+						prato.getCaracteristica());
+				this.confirmaPrato(caracteristica);
+
+				if (this.resultConfirm == JOptionPane.YES_OPTION) {
+
+					String descricao = String.format(
+							this.getProperties().getProperty(GourmetProperties.PRATO_PENSOU.toString()),
+							prato.getDescricao());
+
+					this.confirmaPrato(descricao);
 
 					if (this.resultConfirm == JOptionPane.YES_OPTION) {
 						this.acertei();
+						break;
 					}
-				} else {
-					this.acertei();
 				}
-
-				break;
 			}
 
 		}
 
-		this.pratoPreferido(contador);
+		this.pratoPreferido(contador, pratos);
 
 	}
 
-	private String obterPrato(Prato prato) {
-		return prato.getCaracteristica() == null || prato.getCaracteristica().isEmpty() ? prato.getDescricao()
-				: prato.getCaracteristica();
-	}
-
-	/**
-	 * Método que mostra o prato que possivelmente foi pensado
-	 * 
-	 * @param subPrato
-	 */
-	private void confirmaPrato(String subPrato) {
-		this.resultConfirm = JOptionPane.showConfirmDialog(this,
-				String.format(this.getProperties().getProperty(GourmetProperties.PRATO_PENSOU.toString()), subPrato),
+	private void confirmaPrato(String msg) {
+		this.resultConfirm = JOptionPane.showConfirmDialog(this, msg,
 				this.getProperties().getProperty(GourmetProperties.CONFIRMACAO.toString()), JOptionPane.YES_NO_OPTION);
 	}
 
@@ -164,7 +174,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * Método que armazena o prato preferido
 	 * 
 	 */
-	private void pratoPreferido(int contador) {
+	private void pratoPreferido(int contador, List<Prato> pratos) {
 		// caso todas as respostas anteriores forem NÂO
 		if (this.resultConfirm == 1) {
 
@@ -176,12 +186,12 @@ public class GourmetMotor extends JFrame implements Serializable {
 			// pede qual caracteristica do prato que gosta
 			String caracteristicaPrato = JOptionPane.showInputDialog(this,
 					String.format(this.getProperties().getProperty(GourmetProperties.TIPO_PRATO.toString()),
-							descricaoPrato, this.obterPratoAnterior(contador)),
+							descricaoPrato, this.obterPratoAnterior(contador, pratos)),
 					this.getProperties().getProperty(GourmetProperties.CARACTERISTICA_PRATO.toString()),
 					JOptionPane.QUESTION_MESSAGE);
 
 			// adiciona o novo prato na lista de pratos
-			this.pratos.add(1, new Prato(descricaoPrato, caracteristicaPrato));
+			pratos.add(new Prato(descricaoPrato, caracteristicaPrato));
 		}
 	}
 
@@ -191,9 +201,9 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * @param contador
 	 * @return String
 	 */
-	private String obterPratoAnterior(int contador) {
+	private String obterPratoAnterior(int contador, List<Prato> pratos) {
 		int index = contador > 0 ? contador - 1 : 0;
-		Prato pratoAnterior = this.pratos.get(index);
+		Prato pratoAnterior = pratos.get(index);
 		return pratoAnterior.getDescricao();
 	}
 
@@ -212,7 +222,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 		JButton button = new JButton(this.getProperties().getProperty(GourmetProperties.OK.toString()));
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				executarMotorJogo();
+				executarPratoMassa();
 			}
 		});
 
@@ -236,12 +246,20 @@ public class GourmetMotor extends JFrame implements Serializable {
 		setLocationRelativeTo(null);
 	}
 
-	public List<Prato> getPratos() {
-		return pratos;
+	public List<Prato> getPratoMassa() {
+		return pratoMassa;
 	}
 
-	public void setPratos(List<Prato> pratos) {
-		this.pratos = pratos;
+	public void setPratoMassa(List<Prato> pratoMassa) {
+		this.pratoMassa = pratoMassa;
+	}
+
+	public List<Prato> getPratoBolo() {
+		return pratoBolo;
+	}
+
+	public void setPratoBolo(List<Prato> pratoBolo) {
+		this.pratoBolo = pratoBolo;
 	}
 
 	public int getResultConfirm() {
