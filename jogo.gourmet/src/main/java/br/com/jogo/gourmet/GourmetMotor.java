@@ -191,7 +191,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 					JOptionPane.QUESTION_MESSAGE);
 
 			// adiciona o novo prato na lista de pratos
-			pratos.add(new Prato(descricaoPrato, caracteristicaPrato));
+			pratos.add(0, new Prato(descricaoPrato, caracteristicaPrato));
 		}
 	}
 
