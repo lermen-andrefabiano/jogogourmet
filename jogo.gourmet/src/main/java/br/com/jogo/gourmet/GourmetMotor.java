@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
 
+import br.com.jogo.gourmet.enuns.GourmetProperties;
 import br.com.jogo.gourmet.model.Prato;
 
 /**
@@ -27,6 +28,10 @@ import br.com.jogo.gourmet.model.Prato;
  *
  */
 public class GourmetMotor extends JFrame implements Serializable {
+
+	private static final String GOURMET_PROPERTIES = "gourmet.properties";
+
+	private static final String FONT_TAHOMA = "Tahoma";
 
 	private static final long serialVersionUID = -8331285322591800101L;
 
@@ -52,7 +57,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	public Properties getProperties() {
 		if (this.prop == null) {
 			// obtem as lables do arquivo gourmet.properties
-			InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("gourmet.properties");
+			InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(GOURMET_PROPERTIES);
 
 			this.prop = new Properties();
 
@@ -75,11 +80,11 @@ public class GourmetMotor extends JFrame implements Serializable {
 		this.pratos = new ArrayList<>();
 
 		// prato de massa
-		Prato pratoMassa = new Prato(this.getProperties().getProperty("gourmet.massa"), "");
-		pratoMassa.getSubPrato().add(this.getProperties().getProperty("gourmet.lasanha"));
+		Prato pratoMassa = new Prato(this.getProperties().getProperty(GourmetProperties.MASSA.toString()), "");
+		pratoMassa.getSubPrato().add(this.getProperties().getProperty(GourmetProperties.LASANHA.toString()));
 
 		// prato de bolo
-		Prato pratoBolo = new Prato(this.getProperties().getProperty("gourmet.bolo.chocolate"), "");
+		Prato pratoBolo = new Prato(this.getProperties().getProperty(GourmetProperties.BOLO_CHOCOLATE.toString()), "");
 
 		this.pratos.add(pratoMassa);
 		this.pratos.add(pratoBolo);
@@ -103,7 +108,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 			if (this.resultConfirm == JOptionPane.YES_OPTION) {
 				if (!prato.getSubPrato().isEmpty()) {
 					for (String subPrato : prato.getSubPrato()) {
-						// caso o prato for massa, verifica o seus sub pratos ex lasanha
+						// caso o prato for massa, verifica o seus sub pratos ex
+						// lasanha
 						this.confirmaPrato(subPrato);
 
 						if (this.resultConfirm == JOptionPane.YES_OPTION) {
@@ -116,10 +122,10 @@ public class GourmetMotor extends JFrame implements Serializable {
 					if (this.resultConfirm == JOptionPane.YES_OPTION) {
 						this.acertei();
 					}
-				}else{
+				} else {
 					this.acertei();
-				}				
-				
+				}
+
 				break;
 			}
 
@@ -136,16 +142,17 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 */
 	private void confirmaPrato(String subPrato) {
 		this.resultConfirm = JOptionPane.showConfirmDialog(this,
-				String.format(this.getProperties().getProperty("gourmet.prato.pensou"), subPrato),
-				this.getProperties().getProperty("gourmet.confirmacao"), JOptionPane.YES_NO_OPTION);
+				String.format(this.getProperties().getProperty(GourmetProperties.PRATO_PENSOU.toString()), subPrato),
+				this.getProperties().getProperty(GourmetProperties.CONFIRMACAO.toString()), JOptionPane.YES_NO_OPTION);
 	}
 
 	/**
 	 * Método que mostra a mensagem de acerto do prato
 	 */
 	private void acertei() {
-		JOptionPane.showMessageDialog(this, this.getProperties().getProperty("gourmet.acertei.novo"),
-				this.getProperties().getProperty("gourmet.acertei"), JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, this.getProperties().getProperty(GourmetProperties.ACERTEI_NOVO.toString()),
+				this.getProperties().getProperty(GourmetProperties.ACERTEI.toString()),
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**
@@ -155,16 +162,18 @@ public class GourmetMotor extends JFrame implements Serializable {
 	private void pratoPreferido(int contador) {
 		// caso todas as respostas anteriores forem NÂO
 		if (this.resultConfirm == 1) {
-			
+
 			// pede qual prato gosta
 			String descricaoPrato = JOptionPane.showInputDialog(this,
-					this.getProperties().getProperty("gourmet.qual.prato"),
-					this.getProperties().getProperty("gourmet.prato"), JOptionPane.QUESTION_MESSAGE);
+					this.getProperties().getProperty(GourmetProperties.QUAL_PRATO.toString()),
+					this.getProperties().getProperty(GourmetProperties.PRATO.toString()), JOptionPane.QUESTION_MESSAGE);
 
 			// pede qual caracteristica do prato que gosta
 			String caracteristicaPrato = JOptionPane.showInputDialog(this,
-					String.format(this.getProperties().getProperty("gourmet.tipo.prato"), descricaoPrato, this.obterPratoAnterior(contador)),
-					this.getProperties().getProperty("gourmet.caracteristica.prato"), JOptionPane.QUESTION_MESSAGE);
+					String.format(this.getProperties().getProperty(GourmetProperties.TIPO_PRATO.toString()),
+							descricaoPrato, this.obterPratoAnterior(contador)),
+					this.getProperties().getProperty(GourmetProperties.CARACTERISTICA_PRATO.toString()),
+					JOptionPane.QUESTION_MESSAGE);
 
 			// adiciona o novo prato na lista de pratos
 			this.pratos.add(1, new Prato(descricaoPrato, caracteristicaPrato));
@@ -188,14 +197,14 @@ public class GourmetMotor extends JFrame implements Serializable {
 	 * 
 	 */
 	private void initComponents() {
-		setTitle(this.getProperties().getProperty("gourmet.titulo"));
+		setTitle(this.getProperties().getProperty(GourmetProperties.TITULO.toString()));
 		setVisible(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		JLabel label = new JLabel(this.getProperties().getProperty("gourmet.dialogo.gosto"));
-		label.setFont(new Font("Tahoma", 1, 11));
+		JLabel label = new JLabel(this.getProperties().getProperty(GourmetProperties.DIALOGO_GOSTO.toString()));
+		label.setFont(new Font(FONT_TAHOMA, 1, 11));
 
-		JButton button = new JButton(this.getProperties().getProperty("gourmet.ok"));
+		JButton button = new JButton(this.getProperties().getProperty(GourmetProperties.OK.toString()));
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				executarMotorJogo();
@@ -206,7 +215,8 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createSequentialGroup().addContainerGap(64, Short.MAX_VALUE).addComponent(label)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(button).addGap(15, 15, 15)));
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(button).addGap(15, 15,
+								15)));
 
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
