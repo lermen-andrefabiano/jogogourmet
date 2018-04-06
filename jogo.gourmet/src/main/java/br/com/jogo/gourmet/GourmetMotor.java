@@ -205,8 +205,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createSequentialGroup().addContainerGap(64, Short.MAX_VALUE).addComponent(label)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(button).addGap(19, 19,
-								19)));
+						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(button).addGap(15, 15, 15)));
 
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
