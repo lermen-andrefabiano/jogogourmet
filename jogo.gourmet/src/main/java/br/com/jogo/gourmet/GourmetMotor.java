@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle;
+import javax.swing.WindowConstants;
 
 import br.com.jogo.gourmet.model.Prato;
 
@@ -166,7 +167,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 					this.getProperties().getProperty("gourmet.caracteristica.prato"), JOptionPane.QUESTION_MESSAGE);
 
 			// adiciona o novo prato na lista de pratos
-			this.pratos.add(new Prato(descricaoPrato, caracteristicaPrato));
+			this.pratos.add(1, new Prato(descricaoPrato, caracteristicaPrato));
 		}
 	}
 
@@ -189,7 +190,7 @@ public class GourmetMotor extends JFrame implements Serializable {
 	private void initComponents() {
 		setTitle(this.getProperties().getProperty("gourmet.titulo"));
 		setVisible(true);
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		JLabel label = new JLabel(this.getProperties().getProperty("gourmet.dialogo.gosto"));
 		label.setFont(new Font("Tahoma", 1, 11));
